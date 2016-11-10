@@ -6,13 +6,16 @@ export default {
         score: 0
     },
     dino: {
-        heigth: 0,
-        targetHeight: 0,
-        status: 'normal'
+        height: 100,
+        jumpHeight: -80,
+        fallHeight: 10,
         range: {
             min: 30,
             max: 100
         },
+        isRunning: true,
+        isJumping: false,
+        isRaising: false,
         timestamp: 0
     },
     barrier: {

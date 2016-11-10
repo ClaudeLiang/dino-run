@@ -1,9 +1,10 @@
 import React from 'react'
 
 export default ({dino}) => {
-    const {height = 0} = dino
+    const {height} = dino
     let style = {
-        transform: `translateY(-${height}px)`
+        top: height
     }
-    return <div className="dino" style={style}></div>
+    let className = `dino ${dino.footStep}`
+    return <div className={className} style={style}></div>
 }

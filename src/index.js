@@ -14,20 +14,21 @@ const store = createStore(state)
 
 store.subscribe(data => {
     let {actionType, currentState} = data
-    if (actionType === 'JUMP') renderToDom()
+    renderToDom()
 })
 
 function renderToDom(state) {
-    console.log('render')
     return ReactDOM.render(
       <App state={state || store.getState()} actions={store.actions} />,
       document.getElementById('root')
     )
 }
 
+const {PLAYING} = store.actions
 let requestId = null
 function playing() {
     requestId = requestAnimationFrame(playing)
+    PLAYING()
 }
 function over() {
     cancelAnimationFrame(requestId)
