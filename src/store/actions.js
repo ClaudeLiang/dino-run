@@ -6,11 +6,13 @@ export const PLAYING = state => {
 export const running = state => {
     let game = {...state.game}
     let dino = {...state.dino}
-    let {height, footSteps, footStepGap} = dino
+    let {height, footSteps, footStepGap, isRaising} = dino
+    console.log(isRaising)
+    if (isRaising) dino = JUMP_UP(state).dino
     let now = Date.now()
     game.score = parseInt((now - game.timestamp) / 100)
     dino.footStep = footSteps[parseInt(now / footStepGap) % 4]
-    if (collisitionDetection(state)) [game, dino] = [over(state).game, over(state).dino]
+    if (isCollide(state)) [game, dino] = [over(state).game, over(state).dino]
     return {
         ...state,
         dino,
@@ -32,6 +34,7 @@ export const JUMP_UP = state => {
     let dino = {...state.dino}
     let {height, jumpHeight, range} = dino
     dino.height = rangeLimit(height + jumpHeight, range)
+    dino.isRaising = !(dino.height === range.min)
     return {
         ...state,
         dino
@@ -61,7 +64,7 @@ export const BARRIER_MOVE = state => {
     barrier.list = list.map(b => {
         if (!b) return
         let targetDistance = b.distance + moveDistance
-        if (targetDistance < range.max) return {distance: targetDistance}
+        return {distance: targetDistance}
     })
     return {
         ...state,
@@ -72,12 +75,14 @@ export const BARRIER_MOVE = state => {
 export const start = state => {
     let game = {...state.game}
     let dino = {...state.dino}
+    let initialState = {...state.initialState}
     game.status = 'playing'
     game.timestamp = Date.now()
     game.score = 0
     dino.isRunning = true
     return {
         ...state,
+        ...initialState,
         game,
         dino
     }
@@ -101,15 +106,29 @@ function rangeLimit(value, range) {
     return value
 }
 
-function collisitionDetection (state) {
-    let {barrier, dino} = state
-    let {left, width, size} = dino
-    let dinoRight = document.body.offsetWidth - size.left - size.width
-    let dead = false
-    barrier.list.map(b => {
-        console.log(dinoRight, b.distance, barrier.size.width)
-        if (dinoRight === b.distance + barrier.size.width) dead = true
-        else return b
-    })
-    return dead
+function isCollideWithDeviation(max, min, deviation) {
+    return max - min + deviation > 0
+}
+
+function isCollide(state) {
+    let {barrier, dino, device} = state
+    let dinoPos = {
+        bottom: device.height - dino.height - dino.range.min,
+        left: device.width - dino.size.width,
+        right: device.width - dino.size.width - dino.size.left
+    }
+    for (let i in barrier.list) {
+        let barrierPos = {
+            top: barrier.size.height,
+            left: barrier.list[i].distance + barrier.size.width,
+            right: barrier.list[i].distance
+        }
+        const {deviation} = barrier
+        let isSafe = isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation)
+                    || isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation)
+                    || isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0)
+        console.log(dinoPos.bottom - barrierPos.top)
+        if (!isSafe) return true
+    }
+    return false
 }

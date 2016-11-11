@@ -11,12 +11,12 @@ export default ({state, actions}) => {
     const onOver = isRunning && over
 
     return (
-        <div className="scene" onMouseDown={onJump}>
+        <div className="scene" onTouchStart={onJump}>
             <Dino dino={dino} />
             <Barrier barrier={barrier} />
             <div className="ground"></div>
-            <button onMouseDown={onStart}>START</button>
-            <button onMouseDown={onOver}>OVER</button>
+            <button onTouchStart={onStart}>START</button>
+            <button onTouchStart={onOver}>OVER</button>
             <label className="score">{game.score}</label>
         </div>
     )

@@ -1,4 +1,8 @@
 export default {
+    device: {
+        width: document.body.offsetWidth,
+        height: 145
+    },
     game: {
         status: 'over',
         timestamp: 0,
@@ -9,8 +13,8 @@ export default {
     },
     dino: {
         height: 100,
-        jumpHeight: -80,
-        fallHeight: 1,
+        jumpHeight: -7,
+        fallHeight: 3,
         range: {
             min: 30,
             max: 100
@@ -38,10 +42,10 @@ export default {
             height: 46
         },
         list: [],
-        moveDistance: 2,
+        moveDistance: 5,
         timestamp: 0,
         gap: 1000,
         probability: 50,
-        // collisition
+        deviation: 20
     }
 }
