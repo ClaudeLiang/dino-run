@@ -1,7 +1,7 @@
 {
-  "main.css": "static/css/main.2316cafc.css",
-  "main.css.map": "static/css/main.2316cafc.css.map",
-  "main.js": "static/js/main.679c4c4c.js",
-  "main.js.map": "static/js/main.679c4c4c.js.map",
-  "static\\media\\sprite.png": "static/media/sprite.126bb017.png"
+  "main.css": "dino-run/static/css/main.2316cafc.css",
+  "main.css.map": "dino-run/static/css/main.2316cafc.css.map",
+  "main.js": "dino-run/static/js/main.679c4c4c.js",
+  "main.js.map": "dino-run/static/js/main.679c4c4c.js.map",
+  "static\\media\\sprite.png": "dino-run/static/media/sprite.126bb017.png"
 }
