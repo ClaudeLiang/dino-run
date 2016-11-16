@@ -7,7 +7,6 @@ export const running = state => {
     let game = {...state.game}
     let dino = {...state.dino}
     let {height, footSteps, footStepGap, isRaising} = dino
-    // console.log(isRaising)
     if (isRaising) dino = JUMP_UP(state).dino
     let now = Date.now()
     game.score = parseInt((now - game.timestamp) / 100)
