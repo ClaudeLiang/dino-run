@@ -7,7 +7,7 @@ export const running = state => {
     let game = {...state.game}
     let dino = {...state.dino}
     let {height, footSteps, footStepGap, isRaising} = dino
-    console.log(isRaising)
+    // console.log(isRaising)
     if (isRaising) dino = JUMP_UP(state).dino
     let now = Date.now()
     game.score = parseInt((now - game.timestamp) / 100)
@@ -127,7 +127,9 @@ function isCollide(state) {
         let isSafe = isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation)
                     || isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation)
                     || isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0)
-        console.log(dinoPos.bottom - barrierPos.top)
+        // console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
+        //             isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
+        //             isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0))
         if (!isSafe) return true
     }
     return false
