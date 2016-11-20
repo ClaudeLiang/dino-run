@@ -1,7 +1,7 @@
 export default {
     device: {
         width: document.body.offsetWidth,
-        height: 145
+        height: 143
     },
     game: {
         status: 'over',

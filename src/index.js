@@ -5,6 +5,7 @@ import createStore from './store/createStore'
 import initialState from './store/initialState'
 import * as record from './record'
 import './style/index.css'
+import * as NN from './NN'
 
 const state = {
     initialState: {...initialState},
@@ -15,14 +16,21 @@ const store = createStore(state)
 
 store.subscribe(data => {
     let {actionType, currentState} = data
-    if (actionType === 'start') record.clean()
+    if (actionType === 'start') {
+        record.clean()
+        // NN.start()
+    }
     record.save(currentState)
     renderToDom()
 })
 
 function renderToDom(state) {
     return ReactDOM.render(
-      <App state={state || store.getState()} actions={store.actions} record={record} />,
+      <App state={state || store.getState()}
+          actions={store.actions}
+          record={record}
+          NN={NN}
+      />,
       document.getElementById('root')
     )
 }

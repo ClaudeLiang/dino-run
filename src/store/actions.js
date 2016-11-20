@@ -1,6 +1,7 @@
 export const PLAYING = state => {
     if (state.game.status === 'over') return state
     return BARRIER_MOVE(BARRIER_CREATE(FREE_FALL(running(state))))
+    // return FREE_FALL(running(state))
 }
 
 export const running = state => {
@@ -112,7 +113,7 @@ function isCollideWithDeviation(max, min, deviation) {
 function isCollide(state) {
     let {barrier, dino, device} = state
     let dinoPos = {
-        bottom: device.height - dino.height - dino.range.min,
+        bottom: device.height - dino.height - dino.size.height,
         left: device.width - dino.size.width,
         right: device.width - dino.size.width - dino.size.left
     }
@@ -126,9 +127,9 @@ function isCollide(state) {
         let isSafe = isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation)
                     || isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation)
                     || isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0)
-        // console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
-        //             isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
-        //             isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0))
+        console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
+                    isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
+                    dinoPos.bottom - barrierPos.top)
         if (!isSafe) return true
     }
     return false

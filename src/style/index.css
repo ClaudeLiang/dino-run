@@ -15,7 +15,7 @@ html, body, #root {
 }
 .scene .ground {
     position: absolute;
-    top: 145px;
+    top: 143px;
     left: 0;
     height: 0;
     width: 100%;
