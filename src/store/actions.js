@@ -24,6 +24,7 @@ export const FREE_FALL = state => {
     let dino = {...state.dino}
     let {height, fallHeight, range} = dino
     dino.height = rangeLimit(height + fallHeight, range)
+    dino.isJumping = !(dino.height === range.max)
     return {
         ...state,
         dino

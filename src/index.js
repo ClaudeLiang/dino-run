@@ -16,13 +16,17 @@ const store = createStore(state)
 
 store.subscribe(data => {
     let {actionType, currentState} = data
-    if (actionType === 'start') {
-        record.clean()
-        // NN.start()
-    }
+    if (actionType === 'start') record.clean()
+    if (currentState.game.status === 'over') NN.restart()
     record.save(currentState)
     renderToDom()
 })
+
+window.onresize = () => {
+    let newWidth = document.body.offsetWidth
+    state.initialState.device.width = newWidth
+    state.device.width = newWidth
+}
 
 function renderToDom(state) {
     return ReactDOM.render(
