@@ -128,9 +128,9 @@ function isCollide(state) {
         let isSafe = isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation)
                     || isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation)
                     || isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0)
-        console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
-                    isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
-                    dinoPos.bottom - barrierPos.top)
+        // console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
+        //             isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
+        //             dinoPos.bottom - barrierPos.top)
         if (!isSafe) return true
     }
     return false

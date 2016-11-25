@@ -5,7 +5,7 @@ import createStore from './store/createStore'
 import initialState from './store/initialState'
 import * as record from './record'
 import './style/index.css'
-import * as NN from './NN'
+import * as GA from './GA'
 
 const state = {
     initialState: {...initialState},
@@ -17,7 +17,7 @@ const store = createStore(state)
 store.subscribe(data => {
     let {actionType, currentState} = data
     if (actionType === 'start') record.clean()
-    if (currentState.game.status === 'over') NN.restart()
+    if (currentState.game.status === 'over') GA.restart()
     record.save(currentState)
     renderToDom()
 })
@@ -30,10 +30,11 @@ window.onresize = () => {
 
 function renderToDom(state) {
     return ReactDOM.render(
-      <App state={state || store.getState()}
+      <App
+          state={state || store.getState()}
           actions={store.actions}
           record={record}
-          NN={NN}
+          GA={GA}
       />,
       document.getElementById('root')
     )

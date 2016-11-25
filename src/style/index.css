@@ -43,6 +43,8 @@ html, body, #root {
     top: 99px;
     background: url(../images/sprite.png) no-repeat -333px -3px;
 }
-.scene .score {
+.scene .score,
+.scene .generation,
+.scene .x {
     float: right;
 }
