@@ -44,7 +44,7 @@ export default {
         list: [],
         moveDistance: 5,
         timestamp: 0,
-        gap: 1000,
+        gap: 500,
         probability: 50,
         deviation: 20
     }

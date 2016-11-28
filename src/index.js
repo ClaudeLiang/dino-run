@@ -1,10 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {render} from 'react-dom'
 import App from './App'
 import createStore from './store/createStore'
 import initialState from './store/initialState'
 import * as record from './record'
 import './style/index.css'
+import * as GView from './GA/view'
 import * as GA from './GA'
 
 const state = {
@@ -17,29 +18,29 @@ const store = createStore(state)
 store.subscribe(data => {
     let {actionType, currentState} = data
     if (actionType === 'start') record.clean()
-    if (currentState.game.status === 'over') GA.restart()
+    if (currentState.game.status === 'over' && GA.getState().isLearning)
+        GA.restart()
     record.save(currentState)
     renderToDom()
 })
 
 window.onresize = () => {
-    let newWidth = document.body.offsetWidth
-    state.initialState.device.width = newWidth
-    state.device.width = newWidth
+    window.location.reload()
 }
 
 function renderToDom(state) {
-    return ReactDOM.render(
-      <App
-          state={state || store.getState()}
-          actions={store.actions}
-          record={record}
-          GA={GA}
-      />,
-      document.getElementById('root')
+    return render(
+        <App
+            state={state || store.getState()}
+            actions={store.actions}
+            record={record}
+            GA={GA}
+        />,
+        document.getElementById('root')
     )
 }
 
+GView.setStore(store)
 record.setRender(renderToDom)
 
 const {PLAYING} = store.actions

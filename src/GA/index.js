@@ -1,22 +1,19 @@
-const e = new TouchEvent('touchstart', {
-    bubbles: true
-})
-const triggerTouchStart = elm => {
-    try {
-        elm.dispatchEvent(e)
-    } catch (err) {}
-}
+import {renderApp} from './view'
+import {triggerTouchStart, getClassElm, getLastClassElm} from './utils'
+
 const initState = {
+    isLearning: false,
     format: '00000000',
     times: 0,
     bestX: 0,
     bestY: 0,
-    population: 4,
+    population: 3,
     generation: 0,
     x: 0,
     score: -1,
     xBinary: '00000000'
 }
+
 Object.defineProperty(initState, 'setX', {
     set: function (num) {
         this.x = num
@@ -27,15 +24,6 @@ Object.defineProperty(initState, 'setX', {
 
 let state = initState
 let xState = {}
-
-function getClassElm(className) {
-    return document.querySelector('.' + className)
-}
-
-function getLastClassElm(className) {
-    let doms = document.querySelectorAll('.' + className)
-    return doms[doms.length - 1]
-}
 
 function getX() {
     let x = parseInt(Math.random() * 275 - 1)
@@ -53,11 +41,11 @@ function startGame() {
         state.bestY = state.score
         updateX(state.x, state.score)
     }
-    console.info('times:', state.times,
-        'x:', state.x,
-        'y:', state.score,
-        'bestX:', state.bestX,
-        'bestY:', state.bestY)
+    // console.info('times:', state.times,
+    //     'x:', state.x,
+    //     'y:', state.score,
+    //     'bestX:', state.bestX,
+    //     'bestY:', state.bestY)
     state.score = -1
     state.setX = getX()
     state.times++
@@ -69,17 +57,23 @@ function startGame() {
 function subscribeGame() {
     subscribe()
     function subscribe() {
+        state.score = Number(getClassElm('score').innerText.match(/[0-9][0-9]*/g)[0])
         let _distance = getClassElm('barrier') ?
             parseInt(getLastClassElm('barrier').style.right) : 0
+        let height = parseInt(getClassElm('dino').style.top)
         _distance = 275 - _distance
-        if (_distance > 0 && _distance <= state.x) {
-            triggerTouchStart(getClassElm('scene'))
+        if (height === 100 && _distance > 0 && _distance <= state.x) {
+            triggerTouchStart(getClassElm('jump'))
         }
         requestAnimationFrame(subscribe)
     }
 }
 
-export const learn = startGame
+export const learn = () => {
+    state.isLearning = true
+    renderApp()
+    startGame()
+}
 
 export const restart = () => {
     setTimeout(() => {
