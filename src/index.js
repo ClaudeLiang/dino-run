@@ -10,37 +10,47 @@ import * as GA from './GA'
 
 const state = {
     initialState: {...initialState},
-    ...initialState
+    ...initialState,
+    dinoArr: [
+        {...initialState.dino},
+        {...initialState.dino},
+        {...initialState.dino},
+        {...initialState.dino}
+    ],
+    gameArr: [
+        {...initialState.game},
+        {...initialState.game},
+        {...initialState.game},
+        {...initialState.game}
+    ]
 }
 
 const store = createStore(state)
 
 store.subscribe(data => {
     let {actionType, currentState} = data
+    let {isLearning} = GA.getState()
     if (actionType === 'start') record.clean()
-    if (currentState.game.status === 'over' && GA.getState().isLearning)
+    isLearning && over()
+    if (currentState.game.status === 'over' && isLearning)
         GA.restart()
     record.save(currentState)
-    renderToDom()
+    renderToDom(null, isLearning && GView.getContainer())
 })
 
-window.onresize = () => {
-    window.location.reload()
-}
-
-function renderToDom(state) {
-    return render(
+function renderToDom(state, container) {
+    return render(container || (
         <App
             state={state || store.getState()}
             actions={store.actions}
             record={record}
             GA={GA}
-        />,
-        document.getElementById('root')
-    )
+        />
+    ), document.getElementById('root'))
 }
 
 GView.setStore(store)
+GA.setRender(renderToDom)
 record.setRender(renderToDom)
 
 const {PLAYING} = store.actions
@@ -55,3 +65,7 @@ function over() {
 
 renderToDom()
 playing()
+
+window.onresize = () => {
+    window.location.reload()
+}

@@ -10,6 +10,7 @@ export default ({state, actions, record = {}, GA = {}}) => {
     const {learn, getState} = GA
     const onJump = isRunning && !isJumping && JUMP_UP
     const onStart = !isRunning && start
+    // console.log(isRunning)
     const onReplay = !isRunning && getRecord && getRecord().length > 0 && replay
     const onLearn = !isRunning && learn
     const GAState = getState && getState()
@@ -23,7 +24,6 @@ export default ({state, actions, record = {}, GA = {}}) => {
             <div className="ground"></div>
             <button className="start" onTouchStart={onStart}>START</button>
             <button className="replay" onTouchStart={onReplay}>REVIEW</button>
-            <button className="jump" onTouchStart={onJump}>JUMP</button>
             <button className="learn" onTouchStart={onLearn}>LEARN</button>
             <label className="score">score: {game.score}</label>
             <span style={{display: display}}>

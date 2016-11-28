@@ -1,4 +1,4 @@
-import {renderApp} from './view'
+import {renderApp, getStore, getContainer} from './view'
 import {triggerTouchStart, getClassElm, getLastClassElm} from './utils'
 
 const initState = {
@@ -7,7 +7,7 @@ const initState = {
     times: 0,
     bestX: 0,
     bestY: 0,
-    population: 3,
+    population: 4,
     generation: 0,
     x: 0,
     score: -1,
@@ -24,6 +24,9 @@ Object.defineProperty(initState, 'setX', {
 
 let state = initState
 let xState = {}
+let store = {}
+let requestId = null
+let render = () => {}
 
 function getX() {
     let x = parseInt(Math.random() * 275 - 1)
@@ -50,7 +53,11 @@ function startGame() {
     state.setX = getX()
     state.times++
     if (state.times % 4 === 1) state.generation++
-    triggerTouchStart(getClassElm('start'))
+    const {start} = store.actions
+    start(0)
+    start(1)
+    start(2)
+    start(3)
     subscribeGame()
 }
 
@@ -63,7 +70,7 @@ function subscribeGame() {
         let height = parseInt(getClassElm('dino').style.top)
         _distance = 275 - _distance
         if (height === 100 && _distance > 0 && _distance <= state.x) {
-            triggerTouchStart(getClassElm('jump'))
+            // triggerTouchStart(getClassElm('scene'))
         }
         requestAnimationFrame(subscribe)
     }
@@ -71,7 +78,23 @@ function subscribeGame() {
 
 export const learn = () => {
     state.isLearning = true
-    renderApp()
+    store = getStore()
+    const {PLAYING} = store.actions
+    store.subscribe(data => {
+        let {actionType, currentState} = data
+        // if (currentState.game.status === 'over')
+        //     restart()
+        render(null, getContainer())
+    })
+    requestId && cancelAnimationFrame(requestId)
+    playing()
+    function playing() {
+        requestId = requestAnimationFrame(playing)
+        PLAYING(0)
+        PLAYING(1)
+        PLAYING(2)
+        PLAYING(3)
+    }
     startGame()
 }
 
@@ -83,4 +106,8 @@ export const restart = () => {
 
 export const getState = () => {
     return state
+}
+
+export const setRender = renderFunc => {
+    render = renderFunc
 }

@@ -1,16 +1,15 @@
 import React from 'react'
-import Dino from './components/Dino'
-import Barrier from './components/Barrier'
+import Dino from '../components/Dino'
+import Barrier from '../components/Barrier'
 
-export default ({state, actions, record = {}, GA = {}}) => {
-    const {dino, barrier, game} = state
+export default ({state, actions, id, GA = {}}) => {
+    const {dinoArr, barrier, gameArr} = state
+    const dino = dinoArr[id]
     const {isRunning, isJumping} = dino
-    const {JUMP_UP, start, over} = actions
-    const {getRecord, replay, clean} = record
+    const {JUMP_UP_ID, start, over} = actions
     const {learn, getState} = GA
-    const onJump = isRunning && !isJumping && JUMP_UP
-    const onStart = !isRunning && start
-    const onReplay = !isRunning && getRecord && getRecord().length > 0 && replay
+    const onJump = () => {console.log(id);JUMP_UP_ID(id)}
+    const onStart = () => {if (isRunning) return; console.log(id); start(id)}
     const onLearn = !isRunning && learn
     const GAState = getState && getState()
     const showLearnInfo = getState && getState().isLearning
@@ -21,11 +20,9 @@ export default ({state, actions, record = {}, GA = {}}) => {
             <Dino dino={dino} />
             <Barrier barrier={barrier} />
             <div className="ground"></div>
+            <span>{id}</span>
             <button className="start" onTouchStart={onStart}>START</button>
-            <button className="replay" onTouchStart={onReplay}>REVIEW</button>
-            <button className="jump" onTouchStart={onJump}>JUMP</button>
-            <button className="learn" onTouchStart={onLearn}>LEARN</button>
-            <label className="score">score: {game.score}</label>
+            <label className="score">score: {gameArr[id].score}</label>
             <span style={{display: display}}>
                 <br />
                 <label className="generation">generation: {GAState && GAState.generation}</label>
