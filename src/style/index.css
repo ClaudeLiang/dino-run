@@ -25,7 +25,8 @@ html, body, #root {
     position: absolute;
     width: 40px;
     height: 43px;
-    left: 50px;
+    /*left: 50px;*/
+    right: 275px;
     top: 100px;
     background: url(../images/sprite.png) no-repeat -850px -4px;
 }

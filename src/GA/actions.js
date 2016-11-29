@@ -37,6 +37,7 @@ export const FREE_FALL = (state, id) => {
 
 export const JUMP_UP_ID = (state, id) => {
     // console.log(id, 'jump')
+    if (state.gameArr[id].status === 'over') return state
     let dinoArr = {...state.dinoArr}
     let dino = dinoArr[id]
     let {height, jumpHeight, range} = dino
@@ -52,6 +53,7 @@ export const BARRIER_CREATE = state => {
     let barrier = {...state.barrier}
     let {list, range, timestamp, gap, probability} = barrier
     let now = Date.now()
+    // console.log(gap)
     if (now - timestamp > gap && Math.random() * probability > probability - 1) {
         barrier.timestamp = now
         barrier.list.push({
@@ -153,6 +155,7 @@ function isCollide(state, id) {
         let isSafe = isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation)
                     || isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation)
                     || isCollideWithDeviation(dinoPos.bottom, barrierPos.top, 0)
+        // if (id === 0)
         // console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
         //             isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
         //             dinoPos.bottom - barrierPos.top)
