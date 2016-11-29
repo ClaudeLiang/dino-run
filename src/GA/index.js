@@ -1,75 +1,83 @@
 import {renderApp, getStore, getContainer} from './view'
-import {triggerTouchStart, getClassElm, getLastClassElm, batch} from './utils'
+import {getClassElm, getLastClassElm, batch, binarify, decimalfy, sortWithProp} from './utils'
 
 const initState = {
     isLearning: false,
-    format: '00000000',
-    times: 0,
-    bestX: 0,
-    bestY: 0,
-    population: 4,
     generation: 0,
-    x: 0,
-    score: -1,
-    xBinary: '00000000'
+    arr: null,
+    valueStateArr: {}
 }
-const argsWithBarrier = [0, 1, 2, 3, 4]
-
-Object.defineProperty(initState, 'setX', {
-    set: function (num) {
-        this.x = num
-        let str = this.format + num.toString(2)
-        this.xBinary = str.substring(str.length - this.format.length, str.length)
-    }
-})
 
 let state = initState
-let xState = {}
 let store = {}
 let requestId = null
 let render = () => {}
 
-function getX() {
-    let x = parseInt(Math.random() * 275 - 1)
-    if (xState[x]) return getX()
-    return x
+const argsWithBarrier = [0, 1, 2, 3, 4]
+
+export function choose(arr) {
+
 }
 
-function updateX(x, y) {
-    xState[x] = y
+export function exchange() {
+
+}
+
+export function mutation() {
+
+}
+
+function initArr() {
+    let arr = []
+    for (let i = 0; i < 4; i++) {
+        let value = getValue()
+        arr.push({
+            value,
+            binary: binarify(value),
+            fitness: 0
+        })
+    }
+    return arr
+}
+
+function getValue() {
+    let value = parseInt(Math.random() * 275 - 1)
+    if (state.valueStateArr[value]) return getValue()
+    return value
+}
+
+function setValue(value, fitness) {
+    state.valueStateArr[value] = fitness
 }
 
 function startGame() {
-    if (state.bestY < state.score) {
-        state.bestX = state.x
-        state.bestY = state.score
-        updateX(state.x, state.score)
+    state.arr.map(elm => {
+        if (elm.value > -1) setValue(elm.value, elm.fitness)
+    })
+    if (!state.arr) {
+        state.arr = initArr()
+    } else {
+        state.arr = exchange(choose(sortWithProp(state.arr)))
     }
-    // console.info('times:', state.times,
-    //     'x:', state.x,
-    //     'y:', state.score,
-    //     'bestX:', state.bestX,
-    //     'bestY:', state.bestY)
-    state.score = -1
-    state.setX = getX()
-    state.times++
-    if (state.times % 4 === 1) state.generation++
     const {start} = store.actions
     batch(start)
     subscribeGame()
 }
 
 function subscribeGame() {
+    const {JUMP_UP_ID} = store.actions
     subscribe()
     function subscribe() {
-        state.score = Number(getClassElm('score').innerText.match(/[0-9][0-9]*/g)[0])
+        // state.score = Number(getClassElm('score').innerText.match(/[0-9][0-9]*/g)[0])
         let _distance = getClassElm('barrier') ?
             parseInt(getLastClassElm('barrier').style.right) : 0
         let height = parseInt(getClassElm('dino').style.top)
         _distance = 275 - _distance
-        if (height === 100 && _distance > 0 && _distance <= state.x) {
-            // triggerTouchStart(getClassElm('scene'))
-        }
+        if (height === 100 && _distance > 0)
+            for (let id = 0; id < 4; id++)
+                if (_distance <= state.arr[id].value) {
+                    JUMP_UP_ID(id)
+                }
         requestAnimationFrame(subscribe)
     }
 }
@@ -81,7 +89,6 @@ export const learn = () => {
     store.subscribe(data => {
         let {actionType, currentState} = data
         let liveNum = 0
-        console.log(currentState.gameArr)
         for (let id in currentState.gameArr)
             currentState.gameArr[id].status !== 'over' && liveNum++
         if (liveNum === 0) restart()

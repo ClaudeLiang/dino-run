@@ -7,7 +7,7 @@ import * as record from './record'
 import './style/index.css'
 import * as GView from './GA/view'
 import * as GA from './GA'
-
+console.log(GA.getState())
 const initialState = {
     ..._initialState,
     dinoArr: objArrGen(_initialState.dino),
