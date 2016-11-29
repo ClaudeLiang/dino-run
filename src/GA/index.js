@@ -1,5 +1,5 @@
 import {renderApp, getStore, getContainer} from './view'
-import {triggerTouchStart, getClassElm, getLastClassElm} from './utils'
+import {triggerTouchStart, getClassElm, getLastClassElm, batch} from './utils'
 
 const initState = {
     isLearning: false,
@@ -54,10 +54,7 @@ function startGame() {
     state.times++
     if (state.times % 4 === 1) state.generation++
     const {start} = store.actions
-    start(0)
-    start(1)
-    start(2)
-    start(3)
+    batch(start)
     subscribeGame()
 }
 
@@ -90,10 +87,7 @@ export const learn = () => {
     playing()
     function playing() {
         requestId = requestAnimationFrame(playing)
-        PLAYING(0)
-        PLAYING(1)
-        PLAYING(2)
-        PLAYING(3)
+        batch(PLAYING)
     }
     startGame()
 }
