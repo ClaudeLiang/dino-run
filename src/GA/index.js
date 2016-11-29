@@ -13,6 +13,7 @@ const initState = {
     score: -1,
     xBinary: '00000000'
 }
+const argsWithBarrier = [0, 1, 2, 3, 4]
 
 Object.defineProperty(initState, 'setX', {
     set: function (num) {
@@ -79,15 +80,18 @@ export const learn = () => {
     const {PLAYING} = store.actions
     store.subscribe(data => {
         let {actionType, currentState} = data
-        // if (currentState.game.status === 'over')
-        //     restart()
+        let liveNum = 0
+        console.log(currentState.gameArr)
+        for (let id in currentState.gameArr)
+            currentState.gameArr[id].status !== 'over' && liveNum++
+        if (liveNum === 0) restart()
         render(null, getContainer())
     })
     requestId && cancelAnimationFrame(requestId)
     playing()
     function playing() {
         requestId = requestAnimationFrame(playing)
-        batch(PLAYING)
+        batch(PLAYING, argsWithBarrier)
     }
     startGame()
 }

@@ -2,26 +2,28 @@ import React from 'react'
 import {render} from 'react-dom'
 import App from './App'
 import createStore from './store/createStore'
-import initialState from './store/initialState'
+import _initialState from './store/initialState'
 import * as record from './record'
 import './style/index.css'
 import * as GView from './GA/view'
 import * as GA from './GA'
 
+const initialState = {
+    ..._initialState,
+    dinoArr: objArrGen(_initialState.dino),
+    gameArr: objArrGen(_initialState.game),
+    barrierArr: objArrGen(_initialState.barrier)
+}
 const state = {
     initialState: {...initialState},
-    ...initialState,
-    dinoArr: [
-        {...initialState.dino},
-        {...initialState.dino},
-        {...initialState.dino},
-        {...initialState.dino}
-    ],
-    gameArr: [
-        {...initialState.game},
-        {...initialState.game},
-        {...initialState.game},
-        {...initialState.game}
+    ...initialState
+}
+function objArrGen(Obj) {
+    return [
+        {...Obj},
+        {...Obj},
+        {...Obj},
+        {...Obj}
     ]
 }
 

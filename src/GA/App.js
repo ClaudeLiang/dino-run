@@ -3,8 +3,9 @@ import Dino from '../components/Dino'
 import Barrier from '../components/Barrier'
 
 export default ({state, actions, id, GA = {}}) => {
-    const {dinoArr, barrier, gameArr} = state
+    const {dinoArr, barrierArr, gameArr} = state
     const dino = dinoArr[id]
+    const barrier = barrierArr[id]
     const {isRunning, isJumping} = dino
     const {JUMP_UP_ID, start, over} = actions
     const {learn, getState} = GA

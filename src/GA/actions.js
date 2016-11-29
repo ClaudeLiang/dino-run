@@ -1,7 +1,7 @@
 export const PLAYING = (state, id) => {
-    // console.log(id, state.gameArr[id].status)
+    if (id === 4) return BARRIER_MOVE(BARRIER_CREATE(state))
     if (state.gameArr[id].status === 'over') return state
-    return BARRIER_MOVE(BARRIER_CREATE(FREE_FALL(running(state, id), id)))
+    return BARRIER_COPY(FREE_FALL(running( state, id), id), id)
 }
 
 export const running = (state, id) => {
@@ -10,7 +10,6 @@ export const running = (state, id) => {
     let game = gameArr[id]
     let dino = dinoArr[id]
     let {height, footSteps, footStepGap, isRaising} = dino
-    // console.log(id, isRaising)
     if (isRaising) dino = JUMP_UP_ID(state, id).dinoArr[id]
     let now = Date.now()
     game.score = parseInt((now - game.timestamp) / 100)
@@ -79,19 +78,29 @@ export const BARRIER_MOVE = state => {
     }
 }
 
+export const BARRIER_COPY = (state, id) => {
+    let barrierArr = {...state.barrierArr}
+    let barrier = {...state.barrier}
+    barrierArr[id] = barrier
+    return {
+        ...state,
+        barrierArr
+    }
+}
+
 export const start = (state, id) => {
     let gameArr = {...state.gameArr}
     let dinoArr = {...state.dinoArr}
     let game = gameArr[id]
     let dino = dinoArr[id]
-    // let initialState = {...state.initialState}
+    let initialState = {...state.initialState}
     game.status = 'playing'
     game.timestamp = Date.now()
     game.score = 0
     dino.isRunning = true
     return {
         ...state,
-        // ...initialState,
+        ...initialState,
         gameArr,
         dinoArr
     }
