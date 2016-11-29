@@ -1,26 +1,16 @@
-// const e = new TouchEvent('touchstart', {
-//     bubbles: true
-// })
-//
-// export const triggerTouchStart = elm => {
-//     try {
-//         elm.dispatchEvent(e)
-//     } catch (err) {}
-// }
-//
-// export function getClassElm(className) {
-//     return document.querySelector('.' + className)
-// }
-//
-// export function getLastClassElm(className) {
-//     let doms = document.querySelectorAll('.' + className)
-//     return doms[doms.length - 1]
-// }
-//
-// export function getIndexClassElm(className, index) {
-//     let doms = document.querySelectorAll('.' + className)
-//     return doms[index]
-// }
+export function getClassElm(className) {
+    return document.querySelector('.' + className)
+}
+
+export function getLastClassElm(className) {
+    let doms = document.querySelectorAll('.' + className)
+    return doms[doms.length - 1]
+}
+
+export function getIndexClassElm(className, index) {
+    let doms = document.querySelectorAll('.' + className)
+    return doms[index]
+}
 const _args = [0, 1, 2, 3]
 
 export function batch(func, args = _args) {
@@ -36,8 +26,8 @@ export function decimalfy(num, base = 2) {
     return parseInt(num, base)
 }
 
-export function sortWithProp(arr, prop = 'binary') {
-    return arr.sort(function (a, b) {return a[prop] - b[prop]})
+export function sortWithProp(arr, prop = 'fitness') {
+    return arr.sort(function (a, b) {return b[prop] - a[prop]})
 }
 
 export function figureProbability(arr, prop = 'fitness') {
@@ -45,6 +35,15 @@ export function figureProbability(arr, prop = 'fitness') {
     arr.map(x => {sum += x[prop]})
     let pArr = arr.map(x => x[prop] / sum)
     return pArr
+}
+
+export function expendArr(arr) {
+    let numArr = figureProbability(arr).map(elm => parseInt(elm * 10))
+    let eArr = []
+    numArr.map((n, idx) => {
+        for (let i = 0; i < n; i++) eArr.push(arr[idx])
+    })
+    return eArr
 }
 
 // roulette method

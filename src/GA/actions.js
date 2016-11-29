@@ -15,7 +15,7 @@ export const running = (state, id) => {
     game.score = parseInt((now - game.timestamp) / 100)
     dino.footStep = footSteps[parseInt(now / footStepGap) % 4]
     if (isCollide(state, id)) [game, dino] = [over(state, id).gameArr[id], over(state, id).dinoArr[id]]
-    console.log(id, game.status)
+    // console.log(id, game.status)
     return {
         ...state,
         dinoArr,
@@ -36,6 +36,7 @@ export const FREE_FALL = (state, id) => {
 }
 
 export const JUMP_UP_ID = (state, id) => {
+    // console.log(id, 'jump')
     let dinoArr = {...state.dinoArr}
     let dino = dinoArr[id]
     let {height, jumpHeight, range} = dino
@@ -88,16 +89,20 @@ export const BARRIER_COPY = (state, id) => {
     }
 }
 
-export const start = (state, id) => {
+export const start = state => {
+    let initialState = {...state.initialState}
     let gameArr = {...state.gameArr}
     let dinoArr = {...state.dinoArr}
-    let game = gameArr[id]
-    let dino = dinoArr[id]
-    let initialState = {...state.initialState}
-    game.status = 'playing'
-    game.timestamp = Date.now()
-    game.score = 0
-    dino.isRunning = true
+    for (let i in gameArr) {
+        let game = gameArr[i]
+        game.status = 'playing'
+        game.timestamp = Date.now()
+        game.score = 0
+    }
+    for (let i in dinoArr) {
+        let dino = dinoArr[i]
+        dino.isRunning = true
+    }
     return {
         ...state,
         ...initialState,
@@ -151,7 +156,7 @@ function isCollide(state, id) {
         // console.log(isCollideWithDeviation(dinoPos.right, barrierPos.left, deviation),
         //             isCollideWithDeviation(barrierPos.right, dinoPos.left, deviation),
         //             dinoPos.bottom - barrierPos.top)
-        if (!isSafe) console.log(id, 'dead')
+        // if (!isSafe) console.log(id, 'dead')
         if (!isSafe) return true
     }
     return false
