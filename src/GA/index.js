@@ -1,9 +1,10 @@
-import {renderApp, getStore, getContainer} from './view'
+import {renderApp, getStore, getContainer, setCurrentArr} from './view'
 import {
-    getClassElm, getLastClassElm, getIndexClassElm,
+    getScreenWidth, getClassElm, getLastClassElm, getIndexClassElm,
     batch, binarify, decimalfy, sortWithProp, expendArr
 } from './utils'
 
+const DINO_RIGHT = getScreenWidth() - 50
 const initState = {
     isLearning: false,
     generation: 0,
@@ -21,13 +22,6 @@ let render = () => {}
 const argsWithBarrier = [0, 1, 2, 3, 4]
 
 export function choose(arr) {
-    // let eArr = expendArr(arr)
-    // let iArr = [
-    //     parseInt(Math.random() * eArr.length),
-    //     parseInt(Math.random() * eArr.length),
-    //     parseInt(Math.random() * eArr.length),
-    //     parseInt(Math.random() * eArr.length),
-    // ]
     let max = [state.maxArr[0].value, state.maxArr[1].value]
     let choices = [
         {value: max[0], binary: binarify(max[0]), fitness: 0},
@@ -86,7 +80,7 @@ function initArr() {
 }
 
 function getValue() {
-    let value = parseInt(Math.random() * 275 - 1)
+    let value = parseInt(Math.random() * DINO_RIGHT - 1)
     if (state.valueStateArr[value]) return getValue()
     return value
 }
@@ -111,12 +105,11 @@ function startGame() {
         state.arr = initArr()
         setArrValue(state.arr)
     } else {
-        // for (let i = 0; i < 4; i++)
-        //     console.log(i, ':', state.arr[i].value, ':', state.arr[i].binary, ':', state.arr[i].fitness)
         sortWithProp(state.arr)
         setArrValue(state.arr)
         state.arr = mutation(exchange(choose(sortWithProp(state.arr))))
     }
+    setCurrentArr(state.arr)
     for (let i = 0; i < 4; i++) console.log(i, ':', state.arr[i].value, ':', state.arr[i].binary)
     const {start} = store.actions
     start()
@@ -133,11 +126,11 @@ function subscribeGame() {
             let barriers = getIndexClassElm('scene', id).querySelectorAll('.barrier')
             let nextBarrier = {barrier: null, minDis: 999}
             Array.prototype.map.call(barriers, barrier => {
-                let dis = 275 - parseInt(barrier.style.right)
+                let dis = DINO_RIGHT - parseInt(barrier.style.right)
                 if (dis > 0 && dis < nextBarrier.minDis) nextBarrier = {barrier, minDis: dis}
             })
             let {barrier} = nextBarrier
-            let _distance = barrier ? (275 - parseInt(barrier.style.right)) : 275
+            let _distance = barrier ? (DINO_RIGHT - parseInt(barrier.style.right)) : DINO_RIGHT
             if (height === 100 && _distance > 0 && _distance <= state.arr[id].value) {
                 if (!store.getState().dinoArr[id].isJumping) {
                     console.info('jump:', id)

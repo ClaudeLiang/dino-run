@@ -1,3 +1,7 @@
+export function getScreenWidth() {
+    return document.body.offsetWidth
+}
+
 export function getClassElm(className) {
     return document.querySelector('.' + className)
 }

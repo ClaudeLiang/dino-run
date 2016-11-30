@@ -9,7 +9,7 @@ export default ({state, actions, record, learn}) => {
     const {getRecord, replay, clean} = record
     const onJump = isRunning && !isJumping && JUMP_UP
     const onStart = !isRunning && start
-    const onReplay = !isRunning && getRecord && getRecord().length > 0 && replay
+    const onReplay = !isRunning && getRecord().length > 0 && replay
     const onLearn = !isRunning && learn
 
     return (
