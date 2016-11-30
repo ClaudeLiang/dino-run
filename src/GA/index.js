@@ -174,12 +174,6 @@ export const learn = () => {
     startGame()
 }
 
-export const restart = () => {
-    setTimeout(() => {
-        startGame()
-    }, 500)
-}
-
 export const getState = () => {
     return state
 }

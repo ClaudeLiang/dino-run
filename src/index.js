@@ -7,7 +7,7 @@ import * as record from './record'
 import './style/index.css'
 import * as GView from './GA/view'
 import * as GA from './GA'
-console.log(GA.getState())
+
 const initialState = {
     ..._initialState,
     dinoArr: objArrGen(_initialState.dino),
@@ -34,8 +34,6 @@ store.subscribe(data => {
     let {isLearning} = GA.getState()
     if (actionType === 'start') record.clean()
     isLearning && over()
-    if (currentState.game.status === 'over' && isLearning)
-        GA.restart()
     record.save(currentState)
     renderToDom(null, isLearning && GView.getContainer())
 })
@@ -46,7 +44,7 @@ function renderToDom(state, container) {
             state={state || store.getState()}
             actions={store.actions}
             record={record}
-            GA={GA}
+            learn={GA.learn}
         />
     ), document.getElementById('root'))
 }
