@@ -44,7 +44,7 @@ function renderToDom(state, container) {
             state={state || store.getState()}
             actions={store.actions}
             record={record}
-            learn={GA.learn}
+            GA={GA.learn}
         />
     ), document.getElementById('root'))
 }

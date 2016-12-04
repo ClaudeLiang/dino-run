@@ -73,7 +73,7 @@ export const BARRIER_MOVE = state => {
     barrier.list = list.map(b => {
         if (!b) return
         let targetDistance = b.distance + moveDistance
-        return {distance: targetDistance}
+        return {distance: targetDistance, timestamp: b.timestamp}
     })
     return {
         ...state,

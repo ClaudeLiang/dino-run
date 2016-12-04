@@ -1,7 +1,6 @@
 export const PLAYING = state => {
     if (state.game.status === 'over') return state
     return BARRIER_MOVE(BARRIER_CREATE(FREE_FALL(running(state))))
-    // return FREE_FALL(running(state))
 }
 
 export const running = state => {
@@ -65,7 +64,7 @@ export const BARRIER_MOVE = state => {
     barrier.list = list.map(b => {
         if (!b) return
         let targetDistance = b.distance + moveDistance
-        return {distance: targetDistance}
+        return {distance: targetDistance, timestamp: b.timestamp}
     })
     return {
         ...state,

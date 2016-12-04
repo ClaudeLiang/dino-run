@@ -1,6 +1,6 @@
-import {renderApp, getStore, getContainer, setCurrentArr} from './view'
+import {getStore, getContainer, setCurrentArr} from './view'
 import {
-    getScreenWidth, getClassElm, getLastClassElm, getIndexClassElm,
+    getScreenWidth, getLastClassElm, getIndexClassElm,
     batch, binarify, decimalfy, sortWithProp, expendArr
 } from './utils'
 
@@ -21,7 +21,7 @@ let render = () => {}
 
 const argsWithBarrier = [0, 1, 2, 3, 4]
 
-export function choose(arr) {
+function selection(arr) {
     let max = [state.maxArr[0].value, state.maxArr[1].value]
     let choices = [
         {value: max[0], binary: binarify(max[0]), fitness: 0},
@@ -30,7 +30,7 @@ export function choose(arr) {
     return [choices[0], choices[1], {}, {}]
 }
 
-export function exchange(arr) {
+function crossover(arr) {
     let rand = parseInt(Math.random() * 8) + 1
     let binaries = [arr[0].binary, arr[1].binary]
     let [f0, f1, e0, e1] = [
@@ -44,22 +44,18 @@ export function exchange(arr) {
         {value: decimalfy(newBinaries[0]), binary: newBinaries[0], fitness: 0},
         {value: decimalfy(newBinaries[1]), binary: newBinaries[1], fitness: 0}
     ]
-    // console.log(arr[0], arr[1], '-->', elm2, elm3)
     return [arr[0], arr[1], elm2, elm3]
 }
 
-export function mutation(arr) {
+function mutation(arr) {
     let ps = [Math.random(), Math.random()]
     ps.map((p, i) => {
         if (p > 0.4) {
             let rand = parseInt(Math.random() * 8)
             let binary = arr[i + 2].binary.split('')
-            // console.log('from:', arr[i + 2].binary)
             binary[rand] = 1 - binary[rand]
             binary = binary.join('')
-            // console.log('to:', binary)
             arr[i + 2] = {value: decimalfy(binary), binary: binary, fitness: 0}
-            // console.log(i + 2, 'mutation')
         }
     })
     return arr
@@ -74,7 +70,6 @@ function initArr() {
             binary: binarify(value),
             fitness: 0
         })
-        // console.log(i, ':', value)
     }
     return arr
 }
@@ -107,7 +102,7 @@ function startGame() {
     } else {
         sortWithProp(state.arr)
         setArrValue(state.arr)
-        state.arr = mutation(exchange(choose(sortWithProp(state.arr))))
+        state.arr = mutation(crossover(selection(sortWithProp(state.arr))))
     }
     setCurrentArr(state.arr)
     for (let i = 0; i < 4; i++) console.log(i, ':', state.arr[i].value, ':', state.arr[i].binary)
@@ -133,7 +128,6 @@ function subscribeGame() {
             let _distance = barrier ? (DINO_RIGHT - parseInt(barrier.style.right)) : DINO_RIGHT
             if (height === 100 && _distance > 0 && _distance <= state.arr[id].value) {
                 if (!store.getState().dinoArr[id].isJumping) {
-                    console.info('jump:', id)
                     JUMP_UP_ID(id)
                 }
             }
