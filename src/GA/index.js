@@ -21,6 +21,11 @@ let render = () => {}
 
 const argsWithBarrier = [0, 1, 2, 3, 4]
 
+function log() {
+    for (let i = 0; i < 4; i++)
+        console.log(i, ':', state.arr[i].value, ':', state.arr[i].binary)
+}
+
 function selection(arr) {
     let max = [state.maxArr[0].value, state.maxArr[1].value]
     let choices = [
@@ -51,7 +56,7 @@ function crossover(arr) {
 function mutation(arr) {
     let ps = [Math.random(), Math.random()]
     ps.map((p, i) => {
-        if (p > 0.4) {
+        if (p > 0.6) {
             let rand = parseInt(Math.random() * 8)
             let binary = arr[i + 2].binary.split('')
             binary[rand] = 1 - binary[rand]
@@ -76,14 +81,15 @@ function initArr() {
 }
 
 function getValue() {
-    let value = parseInt(Math.random() * DINO_RIGHT - 1)
+    let value = parseInt(Math.random() * 256 - 1)
     if (state.valueStateArr[value]) return getValue()
     return value
 }
 
 function setValue(value, fitness) {
-    if (!!state.valueStateArr[value]) return
+    if (!!state.valueStateArr[value] && state.valueStateArr[value] >= value) return
     state.valueStateArr[value] = fitness
+    state.maxArr = state.maxArr.filter(s => s.value !== value)
     state.maxArr.push({value, fitness})
     state.maxArr = sortWithProp(state.maxArr)
 }
@@ -96,17 +102,16 @@ function setArrValue(arr) {
 
 function startGame() {
     console.log('generation:', state.generation++)
-
     if (!state.arr) {
         state.arr = initArr()
         setArrValue(state.arr)
     } else {
         sortWithProp(state.arr)
         setArrValue(state.arr)
-        state.arr = mutation(crossover(selection(sortWithProp(state.arr))))
+        state.arr = mutation(crossover(selection(state.arr)))
     }
     setCurrentArr(state.arr)
-    for (let i = 0; i < 4; i++) console.log(i, ':', state.arr[i].value, ':', state.arr[i].binary)
+    log()
     const {start} = store.actions
     start()
     subscribeGame()
@@ -138,7 +143,7 @@ function subscribeGame() {
 }
 
 export const learn = () => {
-    // console.clear()
+    console.clear()
     state.isLearning = true
     store = getStore()
     const {PLAYING} = store.actions
