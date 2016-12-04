@@ -1,7 +1,7 @@
 import {getStore, getContainer, setCurrentArr} from './view'
 import {
-    getScreenWidth, getLastClassElm, getIndexClassElm,
-    batch, binarify, decimalfy, sortWithProp, expendArr
+    getScreenWidth, getIndexClassElm, batch, binarify,
+    decimalfy, sortWithProp, createObjWithDecimal, createObjWithBinary
 } from './utils'
 
 const DINO_RIGHT = getScreenWidth() - 50
@@ -24,8 +24,8 @@ const argsWithBarrier = [0, 1, 2, 3, 4]
 function selection(arr) {
     let max = [state.maxArr[0].value, state.maxArr[1].value]
     let choices = [
-        {value: max[0], binary: binarify(max[0]), fitness: 0},
-        {value: max[1], binary: binarify(max[1]), fitness: 0}
+        createObjWithDecimal(max[0]),
+        createObjWithDecimal(max[1])
     ]
     return [choices[0], choices[1], {}, {}]
 }
@@ -41,9 +41,10 @@ function crossover(arr) {
     ]
     let newBinaries = [f0 + e1, f1 + e0]
     let [elm2, elm3] = [
-        {value: decimalfy(newBinaries[0]), binary: newBinaries[0], fitness: 0},
-        {value: decimalfy(newBinaries[1]), binary: newBinaries[1], fitness: 0}
+        createObjWithBinary(newBinaries[0]),
+        createObjWithBinary(newBinaries[1])
     ]
+    if (arr[1].value === elm2.value) arr = crossover(arr)
     return [arr[0], arr[1], elm2, elm3]
 }
 
@@ -55,7 +56,7 @@ function mutation(arr) {
             let binary = arr[i + 2].binary.split('')
             binary[rand] = 1 - binary[rand]
             binary = binary.join('')
-            arr[i + 2] = {value: decimalfy(binary), binary: binary, fitness: 0}
+            arr[i + 2] = createObjWithBinary(binary)
         }
     })
     return arr
@@ -137,7 +138,7 @@ function subscribeGame() {
 }
 
 export const learn = () => {
-    console.clear()
+    // console.clear()
     state.isLearning = true
     store = getStore()
     const {PLAYING} = store.actions

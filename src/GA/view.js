@@ -6,8 +6,28 @@ import {createStore} from 'relite'
 let store = {}
 let currentArr = []
 
+function objArrGen(Obj) {
+    return [
+        {...Obj},
+        {...Obj},
+        {...Obj},
+        {...Obj}
+    ]
+}
+
 export const setStore = _store => {
-    store = createStore(actions, {..._store.getState()})
+    const _initialState = {..._store.getState()}
+    const initialState = {
+        ..._initialState,
+        dinoArr: objArrGen(_initialState.dino),
+        gameArr: objArrGen(_initialState.game),
+        barrierArr: objArrGen(_initialState.barrier)
+    }
+    const state = {
+        initialState: {...initialState},
+        ...initialState
+    }
+    store = createStore(actions, state)
 }
 
 export const getStore = () => {

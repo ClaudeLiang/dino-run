@@ -58,3 +58,11 @@ export function getPArr(arr, num) {
         resultArr.push((resultArr[i - 1] || 0) + (pArr[i - 1] || 0))
     return resultArr
 }
+
+export function createObjWithDecimal(value) {
+    return {value: value, binary: binarify(value), fitness: 0}
+}
+
+export function createObjWithBinary(value) {
+    return {value: decimalfy(value), binary: value, fitness: 0}
+}
